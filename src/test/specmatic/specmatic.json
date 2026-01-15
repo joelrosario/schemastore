@@ -121,7 +121,7 @@
   "stub": {
     "delayInMilliseconds": 100,
     "dictionary": "./stub-dictionary.json",
-    "generative": true,
+    "generative": "{GENERATIVE: true}",
     "hotReload": "enabled",
     "includeMandatoryAndRequestedKeysInResponse": true,
     "startTimeoutInMilliseconds": 10000,

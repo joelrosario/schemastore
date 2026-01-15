@@ -8,93 +8,167 @@
   "additionalProperties": false,
   "properties": {
     "version": {
-      "type": "integer",
-      "enum": [2],
-      "description": "Configuration version for Specmatic"
+      "description": "Configuration version for Specmatic",
+      "oneOf": [
+        {
+          "type": "integer",
+          "enum": [2]
+        },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     },
     "contracts": {
-      "type": "array",
       "description": "Array of contract configurations",
-      "items": {
-        "$ref": "#/definitions/ContractConfig"
-      }
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "$ref": "#/definitions/ContractConfig" },
+              { "$ref": "#/definitions/TemplateValueString" }
+            ]
+          }
+        },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     },
     "auth": {
-      "$ref": "#/definitions/Auth",
-      "description": "Authentication configuration"
+      "description": "Authentication configuration",
+      "oneOf": [
+        { "$ref": "#/definitions/Auth" },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     },
     "pipeline": {
-      "$ref": "#/definitions/Pipeline",
-      "description": "Pipeline configuration for Azure DevOps"
+      "description": "Pipeline configuration for Azure DevOps",
+      "oneOf": [
+        { "$ref": "#/definitions/Pipeline" },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     },
     "environments": {
-      "type": "object",
       "description": "Environment-specific configurations",
-      "additionalProperties": {
-        "$ref": "#/definitions/Environment"
-      }
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/Environment"
+          }
+        },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     },
     "hooks": {
-      "type": "object",
       "description": "Custom hooks configuration",
-      "additionalProperties": { "type": "string" }
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     },
     "repository": {
-      "$ref": "#/definitions/RepositoryInfo",
-      "description": "Repository information"
+      "description": "Repository information",
+      "oneOf": [
+        { "$ref": "#/definitions/RepositoryInfo" },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     },
     "report": {
-      "$ref": "#/definitions/ReportConfigurationDetails",
-      "description": "Report generation configuration"
+      "description": "Report generation configuration",
+      "oneOf": [
+        { "$ref": "#/definitions/ReportConfigurationDetails" },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     },
     "security": {
-      "$ref": "#/definitions/SecurityConfiguration",
-      "description": "Security configuration for API testing"
+      "description": "Security configuration for API testing",
+      "oneOf": [
+        { "$ref": "#/definitions/SecurityConfiguration" },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     },
     "test": {
-      "$ref": "#/definitions/TestConfiguration",
-      "description": "Test execution configuration"
+      "description": "Test execution configuration",
+      "oneOf": [
+        { "$ref": "#/definitions/TestConfiguration" },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     },
     "stub": {
-      "$ref": "#/definitions/StubConfiguration",
-      "description": "Stub/mock server configuration"
+      "description": "Stub/mock server configuration",
+      "oneOf": [
+        { "$ref": "#/definitions/StubConfiguration" },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     },
     "virtualService": {
-      "$ref": "#/definitions/VirtualServiceConfiguration",
-      "description": "Virtual service configuration"
+      "description": "Virtual service configuration",
+      "oneOf": [
+        { "$ref": "#/definitions/VirtualServiceConfiguration" },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     },
     "examples": {
-      "type": "array",
       "description": "List of example file paths",
-      "items": { "type": "string" }
+      "oneOf": [
+        {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     },
     "workflow": {
-      "$ref": "#/definitions/WorkflowConfiguration",
-      "description": "Workflow configuration for ID management"
+      "description": "Workflow configuration for ID management",
+      "oneOf": [
+        { "$ref": "#/definitions/WorkflowConfiguration" },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     },
     "ignoreInlineExamples": {
-      "type": ["boolean", "null"],
-      "description": "Whether to ignore inline examples in specifications"
+      "description": "Whether to ignore inline examples in specifications",
+      "oneOf": [
+        { "type": ["boolean", "null"] },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     },
     "additionalExampleParamsFilePath": {
       "type": ["string", "null"],
       "description": "Path to additional example parameters file"
     },
     "attributeSelectionPattern": {
-      "$ref": "#/definitions/AttributeSelectionPattern",
-      "description": "Pattern for selecting attributes in responses"
+      "description": "Pattern for selecting attributes in responses",
+      "oneOf": [
+        { "$ref": "#/definitions/AttributeSelectionPattern" },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     },
     "allPatternsMandatory": {
-      "type": ["boolean", "null"],
-      "description": "Whether all patterns are mandatory"
+      "description": "Whether all patterns are mandatory",
+      "oneOf": [
+        { "type": ["boolean", "null"] },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     },
     "defaultPatternValues": {
-      "type": "object",
       "description": "Default values for patterns",
-      "additionalProperties": true
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": true
+        },
+        { "$ref": "#/definitions/TemplateValueString" }
+      ]
     }
   },
   "definitions": {
+    "TemplateValueString": {
+      "type": "string",
+      "pattern": "^(\\{\\s*\"?[A-Za-z0-9_]+\"?\\s*:\\s*.*\\}|\\[.*\\]|\".*\")$",
+      "description": "Template string for structured values or quoted strings"
+    },
     "ContractConfig": {
       "type": "object",
       "title": "ContractConfig",
@@ -102,126 +176,170 @@
       "additionalProperties": false,
       "properties": {
         "git": {
-          "type": "object",
           "description": "Git contract source details.",
-          "additionalProperties": false,
-          "properties": {
-            "url": {
-              "type": ["string", "null"],
-              "description": "URL of the git repository."
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "url": {
+                  "type": ["string", "null"],
+                  "description": "URL of the git repository."
+                },
+                "branch": {
+                  "type": ["string", "null"],
+                  "description": "Branch name in the git repository."
+                },
+                "matchBranch": {
+                  "oneOf": [
+                    { "type": "boolean" },
+                    { "$ref": "#/definitions/TemplateValueString" }
+                  ]
+                }
+              },
+              "required": []
             },
-            "branch": {
-              "type": ["string", "null"],
-              "description": "Branch name in the git repository."
-            },
-            "matchBranch": {
-              "type": "boolean"
-            }
-          },
-          "required": []
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         },
         "filesystem": {
-          "type": "object",
           "description": "Filesystem contract source details.",
-          "additionalProperties": false,
-          "properties": {
-            "directory": {
-              "type": "string",
-              "description": "Directory path for contract files."
-            }
-          },
-          "required": []
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "directory": {
+                  "type": "string",
+                  "description": "Directory path for contract files."
+                }
+              },
+              "required": []
+            },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         },
         "provides": {
-          "type": "array",
           "description": "List of specs provided for testing. Each entry can be a string or an object.",
-          "items": {
-            "oneOf": [
-              {
-                "type": "string",
-                "description": "Path to a spec file."
-              },
-              {
-                "type": "object",
-                "description": "Object describing provided specs and test configuration.",
-                "additionalProperties": false,
-                "properties": {
-                  "specs": {
-                    "type": "array",
-                    "items": { "type": "string" },
-                    "description": "List of spec file paths."
-                  },
-                  "baseUrl": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
                     "type": "string",
-                    "description": "Test base URL."
+                    "description": "Path to a spec file."
                   },
-                  "host": {
-                    "type": "string",
-                    "description": "Host for the test base URL."
-                  },
-                  "port": {
-                    "type": "integer",
-                    "description": "Port for the test base URL."
-                  },
-                  "resiliencyTests": {
+                  {
                     "type": "object",
+                    "description": "Object describing provided specs and test configuration.",
                     "additionalProperties": false,
-                    "description": "Resiliency test configuration.",
                     "properties": {
-                      "enable": {
+                      "specs": {
+                        "description": "List of spec file paths.",
+                        "oneOf": [
+                          {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          },
+                          { "$ref": "#/definitions/TemplateValueString" }
+                        ]
+                      },
+                      "baseUrl": {
                         "type": "string",
-                        "enum": ["all", "positiveOnly", "none"],
-                        "description": "Resiliency test suite to enable."
+                        "description": "Test base URL."
+                      },
+                      "host": {
+                        "type": "string",
+                        "description": "Host for the test base URL."
+                      },
+                      "port": {
+                        "description": "Port for the test base URL.",
+                        "oneOf": [
+                          { "type": "integer" },
+                          { "$ref": "#/definitions/TemplateValueString" }
+                        ]
+                      },
+                      "resiliencyTests": {
+                        "description": "Resiliency test configuration.",
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                              "enable": {
+                                "type": "string",
+                                "enum": ["all", "positiveOnly", "none"],
+                                "description": "Resiliency test suite to enable."
+                              }
+                            },
+                            "required": []
+                          },
+                          { "$ref": "#/definitions/TemplateValueString" }
+                        ]
                       }
                     },
-                    "required": []
+                    "required": ["specs"]
                   }
-                },
-                "required": ["specs"]
+                ]
               }
-            ]
-          }
+            },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         },
         "consumes": {
-          "type": "array",
           "description": "List of specs consumed for stubbing. Each entry can be a string or an object.",
-          "items": {
-            "oneOf": [
-              {
-                "type": "string",
-                "description": "Path to a spec file."
-              },
-              {
-                "type": "object",
-                "additionalProperties": false,
-                "description": "Object describing consumed specs and stub configuration.",
-                "properties": {
-                  "specs": {
-                    "type": "array",
-                    "items": { "type": "string" },
-                    "description": "List of spec file paths."
-                  },
-                  "baseUrl": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
                     "type": "string",
-                    "description": "Full base URL for the stub."
+                    "description": "Path to a spec file."
                   },
-                  "host": {
-                    "type": "string",
-                    "description": "Host for the stub base URL."
-                  },
-                  "port": {
-                    "type": "integer",
-                    "description": "Port for the stub base URL."
-                  },
-                  "basePath": {
-                    "type": "string",
-                    "description": "Base path for the stub base URL."
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "Object describing consumed specs and stub configuration.",
+                    "properties": {
+                      "specs": {
+                        "description": "List of spec file paths.",
+                        "oneOf": [
+                          {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          },
+                          { "$ref": "#/definitions/TemplateValueString" }
+                        ]
+                      },
+                      "baseUrl": {
+                        "type": "string",
+                        "description": "Full base URL for the stub."
+                      },
+                      "host": {
+                        "type": "string",
+                        "description": "Host for the stub base URL."
+                      },
+                      "port": {
+                        "description": "Port for the stub base URL.",
+                        "oneOf": [
+                          { "type": "integer" },
+                          { "$ref": "#/definitions/TemplateValueString" }
+                        ]
+                      },
+                      "basePath": {
+                        "type": "string",
+                        "description": "Base path for the stub base URL."
+                      }
+                    },
+                    "required": ["specs"]
                   }
-                },
-                "required": ["specs"]
+                ]
               }
-            ]
-          }
+            },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         }
       },
       "required": []
@@ -260,8 +378,11 @@
           "description": "Azure DevOps project name"
         },
         "definitionId": {
-          "type": "integer",
-          "description": "Pipeline definition ID"
+          "description": "Pipeline definition ID",
+          "oneOf": [
+            { "type": "integer" },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         }
       }
     },
@@ -271,14 +392,24 @@
       "description": "Environment-specific configuration",
       "properties": {
         "baseurls": {
-          "type": ["object", "null"],
           "description": "Base URLs for different services",
-          "additionalProperties": { "type": "string" }
+          "oneOf": [
+            {
+              "type": ["object", "null"],
+              "additionalProperties": { "type": "string" }
+            },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         },
         "variables": {
-          "type": ["object", "null"],
           "description": "Environment variables",
-          "additionalProperties": { "type": "string" }
+          "oneOf": [
+            {
+              "type": ["object", "null"],
+              "additionalProperties": { "type": "string" }
+            },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         }
       }
     },
@@ -303,12 +434,27 @@
       "description": "Report generation configuration",
       "properties": {
         "formatters": {
-          "type": ["array", "null"],
           "description": "List of report formatters",
-          "items": { "$ref": "#/definitions/ReportFormatterDetails" },
-          "deprecated": true
+          "deprecated": true,
+          "oneOf": [
+            {
+              "type": ["array", "null"],
+              "items": {
+                "oneOf": [
+                  { "$ref": "#/definitions/ReportFormatterDetails" },
+                  { "$ref": "#/definitions/TemplateValueString" }
+                ]
+              }
+            },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         },
-        "types": { "$ref": "#/definitions/ReportTypes" }
+        "types": {
+          "oneOf": [
+            { "$ref": "#/definitions/ReportTypes" },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
+        }
       }
     },
     "ReportFormatterDetails": {
@@ -328,8 +474,11 @@
           "description": "Layout style for the report"
         },
         "lite": {
-          "type": ["boolean", "null"],
-          "description": "Whether to generate a lite version of the report"
+          "description": "Whether to generate a lite version of the report",
+          "oneOf": [
+            { "type": ["boolean", "null"] },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         },
         "title": {
           "type": ["string", "null"],
@@ -358,7 +507,12 @@
       "additionalProperties": false,
       "description": "Configuration for different report types",
       "properties": {
-        "APICoverage": { "$ref": "#/definitions/APICoverage" }
+        "APICoverage": {
+          "oneOf": [
+            { "$ref": "#/definitions/APICoverage" },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
+        }
       }
     },
     "APICoverage": {
@@ -366,7 +520,12 @@
       "additionalProperties": false,
       "description": "API coverage report configuration",
       "properties": {
-        "OpenAPI": { "$ref": "#/definitions/APICoverageConfiguration" }
+        "OpenAPI": {
+          "oneOf": [
+            { "$ref": "#/definitions/APICoverageConfiguration" },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
+        }
       }
     },
     "APICoverageConfiguration": {
@@ -374,11 +533,21 @@
       "additionalProperties": false,
       "description": "OpenAPI coverage configuration",
       "properties": {
-        "successCriteria": { "$ref": "#/definitions/SuccessCriteria" },
+        "successCriteria": {
+          "oneOf": [
+            { "$ref": "#/definitions/SuccessCriteria" },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
+        },
         "excludedEndpoints": {
-          "type": ["array", "null"],
           "description": "List of endpoints to exclude from coverage",
-          "items": { "type": "string" }
+          "oneOf": [
+            {
+              "type": ["array", "null"],
+              "items": { "type": "string" }
+            },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         }
       }
     },
@@ -388,16 +557,25 @@
       "description": "Success criteria for API coverage",
       "properties": {
         "minThresholdPercentage": {
-          "type": ["integer", "null"],
-          "description": "Minimum coverage percentage threshold"
+          "description": "Minimum coverage percentage threshold",
+          "oneOf": [
+            { "type": ["integer", "null"] },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         },
         "maxMissedEndpointsInSpec": {
-          "type": ["integer", "null"],
-          "description": "Maximum number of missed endpoints allowed"
+          "description": "Maximum number of missed endpoints allowed",
+          "oneOf": [
+            { "type": ["integer", "null"] },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         },
         "enforce": {
-          "type": ["boolean", "null"],
-          "description": "Whether to enforce the success criteria"
+          "description": "Whether to enforce the success criteria",
+          "oneOf": [
+            { "type": ["boolean", "null"] },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         }
       }
     },
@@ -406,7 +584,12 @@
       "additionalProperties": false,
       "description": "Security configuration",
       "properties": {
-        "OpenAPI": { "$ref": "#/definitions/OpenAPISecurityConfiguration" }
+        "OpenAPI": {
+          "oneOf": [
+            { "$ref": "#/definitions/OpenAPISecurityConfiguration" },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
+        }
       }
     },
     "OpenAPISecurityConfiguration": {
@@ -415,11 +598,19 @@
       "description": "OpenAPI security configuration",
       "properties": {
         "securitySchemes": {
-          "type": "object",
           "description": "Security scheme configurations",
-          "additionalProperties": {
-            "$ref": "#/definitions/SecuritySchemeConfiguration"
-          }
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": {
+                "oneOf": [
+                  { "$ref": "#/definitions/SecuritySchemeConfiguration" },
+                  { "$ref": "#/definitions/TemplateValueString" }
+                ]
+              }
+            },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         }
       }
     },
@@ -448,22 +639,39 @@
       "description": "Test execution configuration",
       "additionalProperties": false,
       "properties": {
-        "resiliencyTests": { "$ref": "#/definitions/ResiliencyTestsConfig" },
+        "resiliencyTests": {
+          "oneOf": [
+            { "$ref": "#/definitions/ResiliencyTestsConfig" },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
+        },
         "validateResponseValues": {
-          "type": ["boolean", "null"],
-          "description": "Whether to validate response values"
+          "description": "Whether to validate response values",
+          "oneOf": [
+            { "type": ["boolean", "null"] },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         },
         "allowExtensibleSchema": {
-          "type": ["boolean", "null"],
-          "description": "Whether to allow extensible schema validation"
+          "description": "Whether to allow extensible schema validation",
+          "oneOf": [
+            { "type": ["boolean", "null"] },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         },
         "timeoutInMilliseconds": {
-          "type": ["integer", "null"],
-          "description": "Test timeout in milliseconds"
+          "description": "Test timeout in milliseconds",
+          "oneOf": [
+            { "type": ["integer", "null"] },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         },
         "strictMode": {
-          "type": ["boolean", "null"],
-          "description": "Whether to enable strict mode for contract testing"
+          "description": "Whether to enable strict mode for contract testing",
+          "oneOf": [
+            { "type": ["boolean", "null"] },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         }
       }
     },
@@ -485,32 +693,47 @@
       "additionalProperties": false,
       "properties": {
         "generative": {
-          "type": ["boolean", "null"],
-          "description": "Whether to enable generative stubbing"
+          "description": "Whether to enable generative stubbing",
+          "oneOf": [
+            { "type": ["boolean", "null"] },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         },
         "delayInMilliseconds": {
-          "type": ["integer", "null"],
-          "description": "Delay to add to stub responses in milliseconds"
+          "description": "Delay to add to stub responses in milliseconds",
+          "oneOf": [
+            { "type": ["integer", "null"] },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         },
         "dictionary": {
           "type": ["string", "null"],
           "description": "Path to dictionary file for generative stubbing"
         },
         "includeMandatoryAndRequestedKeysInResponse": {
-          "type": ["boolean", "null"],
-          "description": "Whether to include mandatory and requested keys in response"
+          "description": "Whether to include mandatory and requested keys in response",
+          "oneOf": [
+            { "type": ["boolean", "null"] },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         },
         "startTimeoutInMilliseconds": {
-          "type": ["integer", "null"],
-          "description": "Timeout for stub server startup in milliseconds"
+          "description": "Timeout for stub server startup in milliseconds",
+          "oneOf": [
+            { "type": ["integer", "null"] },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         },
         "hotReload": {
           "type": ["string", "null"],
           "description": "Hot reload configuration"
         },
         "strictMode": {
-          "type": ["boolean", "null"],
-          "description": "Whether to enable strict mode for stubbing"
+          "description": "Whether to enable strict mode for stubbing",
+          "oneOf": [
+            { "type": ["boolean", "null"] },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         }
       }
     },
@@ -520,9 +743,14 @@
       "additionalProperties": false,
       "properties": {
         "nonPatchableKeys": {
-          "type": "array",
           "description": "List of keys that cannot be patched",
-          "items": { "type": "string" }
+          "oneOf": [
+            {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         }
       }
     },
@@ -532,11 +760,19 @@
       "additionalProperties": false,
       "properties": {
         "ids": {
-          "type": "object",
           "description": "ID operation configurations",
-          "additionalProperties": {
-            "$ref": "#/definitions/WorkflowIDOperation"
-          }
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": {
+                "oneOf": [
+                  { "$ref": "#/definitions/WorkflowIDOperation" },
+                  { "$ref": "#/definitions/TemplateValueString" }
+                ]
+              }
+            },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         }
       }
     },
@@ -561,9 +797,14 @@
       "description": "Pattern for selecting attributes in API responses",
       "properties": {
         "default_fields": {
-          "type": ["array", "null"],
           "description": "Default fields to include",
-          "items": { "type": "string" }
+          "oneOf": [
+            {
+              "type": ["array", "null"],
+              "items": { "type": "string" }
+            },
+            { "$ref": "#/definitions/TemplateValueString" }
+          ]
         },
         "query_param_key": {
           "type": ["string", "null"],
